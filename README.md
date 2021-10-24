@@ -7,3 +7,7 @@ To measure the performance of method executions, measurement probes need to be i
 ## Usage
 
 TODO
+
+## Versioning
+
+The major version of kieker-source-instrumentation equals the major version of Kieker, i.e. versions built to instrument with Kieker 1.15 will be named 1.15.x (or 1.15.x-SNAPSHOT).
