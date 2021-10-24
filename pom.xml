@@ -10,7 +10,7 @@
 
 	<name>kieker-source-instrumentation</name>
 	<description>Enables the instrumentation of Java projects by automatic insertion of the source code</description>
-	<url>http://www.example.com</url>
+	<url>https://github.com/DaGeRe/kieker-source-instrumentation-dagere/</url>
 
 	<build>
 		<plugins>
@@ -109,6 +109,17 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.sonatype.plugins</groupId>
+				<artifactId>nexus-staging-maven-plugin</artifactId>
+				<version>1.6.7</version>
+				<extensions>true</extensions>
+				<configuration>
+					<serverId>sonatype-nexus-staging</serverId>
+					<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+					<autoReleaseAfterClose>true</autoReleaseAfterClose>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 
@@ -191,7 +202,7 @@
 			</snapshots>
 		</repository>
 	</repositories>
-	
+
 	<licenses>
 		<license>
 			<name>Apache License</name>
@@ -199,7 +210,7 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	
+
 	<developers>
 		<developer>
 			<id>DaGeRe</id>
@@ -207,7 +218,7 @@
 			<email>kopeme@dagere.de</email>
 		</developer>
 	</developers>
-	
+
 	<scm>
 		<connection>scm:git:ssh://github.com:DaGeRe/kieker-source-instrumentation-dagere.git</connection>
 		<developerConnection>scm:git:git@github.com:DaGeRe/kieker-source-instrumentation-dagere.git</developerConnection>
