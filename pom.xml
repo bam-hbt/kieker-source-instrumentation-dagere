@@ -193,9 +193,9 @@
 	</repositories>
 	
 	<scm>
-		<connection>scm:git:ssh://github.com:DaGeRe/KoPeMe.git</connection>
-		<developerConnection>scm:git:git@github.com:DaGeRe/KoPeMe.git</developerConnection>
-		<url>https://git@github.com:DaGeRe/KoPeMe.git</url>
+		<connection>scm:git:ssh://github.com:DaGeRe/kieker-source-instrumentation-dagere.git</connection>
+		<developerConnection>scm:git:git@github.com:DaGeRe/kieker-source-instrumentation-dagere.git</developerConnection>
+		<url>https://git@github.com:DaGeRe/kieker-source-instrumentation-dagere.git</url>
 	</scm>
 
 	<distributionManagement>
