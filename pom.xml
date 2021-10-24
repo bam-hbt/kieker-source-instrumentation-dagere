@@ -200,6 +200,14 @@
 		</license>
 	</licenses>
 	
+	<developers>
+		<developer>
+			<id>DaGeRe</id>
+			<name>David Georg Reichelt</name>
+			<email>kopeme@dagere.de</email>
+		</developer>
+	</developers>
+	
 	<scm>
 		<connection>scm:git:ssh://github.com:DaGeRe/kieker-source-instrumentation-dagere.git</connection>
 		<developerConnection>scm:git:git@github.com:DaGeRe/kieker-source-instrumentation-dagere.git</developerConnection>
