@@ -134,9 +134,15 @@ public class BlockBuilder {
    }
 
    private void buildEmptyConstructor(final String signature, final BlockStmt replacedStatement, final String before, final String after, final CodeBlockTransformer transformer) {
-      new HeaderBuilder(useStaticVariables, enableDeactivation, enableAdaptiveMonitoring, transformer).buildHeader(new BlockStmt(), signature, false, replacedStatement);
-      replacedStatement.addAndGetStatement(transformer.getTransformedBlock(before, useStaticVariables));
-      replacedStatement.addAndGetStatement(transformer.getTransformedBlock(after, useStaticVariables));
+      HeaderBuilder headerBuilder = new HeaderBuilder(useStaticVariables, enableDeactivation, enableAdaptiveMonitoring, transformer);
+      headerBuilder.buildHeader(new BlockStmt(), signature, false, replacedStatement);
+      String beforeStatement = transformer.getTransformedBlock(before, useStaticVariables);
+      replacedStatement.addAndGetStatement(beforeStatement);
+      BlockStmt finallyBlock = new BlockStmt();
+      String afterStatement = transformer.getTransformedBlock(after, useStaticVariables);
+      finallyBlock.addAndGetStatement(afterStatement);
+      TryStmt stmt = new TryStmt(new BlockStmt(), new NodeList<>(), finallyBlock);
+      replacedStatement.addAndGetStatement(stmt);
    }
 
 }

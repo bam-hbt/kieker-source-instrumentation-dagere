@@ -9,6 +9,12 @@ import com.github.javaparser.ast.stmt.IfStmt;
 import net.kieker.sourceinstrumentation.InstrumentationConstants;
 import net.kieker.sourceinstrumentation.instrument.ReachabilityDecider;
 
+/**
+ * Builds the header, i.e. the part of the probe where it is checked whether monitoring is enabled (isMonitoringEnabled) and whether the current
+ * signature is enabled (isProbeActivated)
+ * @author reichelt
+ *
+ */
 public class HeaderBuilder {
    
    private final boolean useStaticVariables, enableDeactivation, enableAdaptiveMonitoring;
