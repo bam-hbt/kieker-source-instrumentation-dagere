@@ -6,7 +6,20 @@ To measure the performance of method executions, measurement probes need to be i
 
 ## Usage
 
-TODO
+To instrument the project `$PROJECT` using source instrumentation, build this project (`mvn clean package`) and then call `java -jar target/kieker-source-instrumentation-1.15.1-SNAPSHOT.jar --folder=$PROJECT`. To execute the project with instrumentation, add Kieker to the build path of your project, e.g. using
+
+```
+<dependency>
+	<groupId>net.kieker-monitoring</groupId>
+	<artifactId>kieker</artifactId>
+	<version>1.15</version>
+</dependency>
+```
+in maven. Afterwards, you can build and run your instrumented project without AspectJ.
+
+You might also specify the following options:
+- `--extractMethod`: Extract original method to own method (might improve performance)
+- 
 
 ## Versioning
 
