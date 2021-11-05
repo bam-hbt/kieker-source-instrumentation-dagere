@@ -19,7 +19,11 @@ in maven. Afterwards, you can build and run your instrumented project without As
 
 You might also specify the following options:
 - `--extractMethod`: Extract original method to own method (might improve performance)
-- 
+- `--aggregate`: Whether to aggregate invocations
+- `--aggregationCount`: How many method invocations to aggregate (default: 1000)
+- `--includedPatterns`: Semicolon-seperated list of patterns of methods to include (if empty, just *)
+- `--excludedPatterns`: Semicolon-seperated list of patterns of methods to exclude
+
 
 ## Versioning
 
