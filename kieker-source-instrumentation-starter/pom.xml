@@ -5,7 +5,7 @@
 
 	<groupId>de.dagere.kieker</groupId>
 	<artifactId>kieker-source-instrumentation-starter</artifactId>
-	<version>1.15.1</version>
+	<version>1.15.2-SNAPSHOT</version>
 
 	<name>kieker-source-instrumentation-starter</name>
 	<description>Enables the instrumentation of Java projects by automatic insertion of the source code</description>
