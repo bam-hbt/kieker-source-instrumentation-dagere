@@ -6,7 +6,7 @@
 
 	<groupId>de.dagere.kieker</groupId>
 	<artifactId>kieker-source-instrumentation-library</artifactId>
-	
+
 	<parent>
 		<groupId>de.dagere.kieker</groupId>
 		<artifactId>kieker-source-instrumentation-parent</artifactId>
@@ -21,7 +21,6 @@
 		<plugins>
 			<plugin>
 				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.8.1</version>
 				<configuration>
 					<source>${java.version}</source>
 					<target>${java.version}</target>
@@ -42,6 +41,51 @@
 						<goals>
 							<goal>integration-test</goal>
 							<goal>verify</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-gpg-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>sign-artifacts</id>
+						<phase>deploy</phase>
+						<goals>
+							<goal>sign</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<configuration>
+					<doclint>none</doclint>
+					<quiet>true</quiet>
+					<nonavbar>true</nonavbar>
+					<notree>true</notree>
+					<nocomment>true</nocomment>
+					<nohelp>true</nohelp>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
 						</goals>
 					</execution>
 				</executions>
