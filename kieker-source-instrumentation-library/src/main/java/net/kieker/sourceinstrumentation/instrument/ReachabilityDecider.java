@@ -2,9 +2,11 @@ package net.kieker.sourceinstrumentation.instrument;
 
 import java.util.Optional;
 
+import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.CatchClause;
 import com.github.javaparser.ast.stmt.DoStmt;
+import com.github.javaparser.ast.stmt.ForStmt;
 import com.github.javaparser.ast.stmt.ReturnStmt;
 import com.github.javaparser.ast.stmt.Statement;
 import com.github.javaparser.ast.stmt.SwitchEntry;
@@ -51,9 +53,15 @@ public class ReachabilityDecider {
       } else if (last instanceof ReturnStmt) {
          afterUnreachable = true;
       } else if (last instanceof BlockStmt) {
-         return isAfterUnreachable((BlockStmt) last); 
+         return isAfterUnreachable((BlockStmt) last);
       } else if (last instanceof SynchronizedStmt) {
-        return isAfterUnreachable(((SynchronizedStmt) last).getBody());
+         return isAfterUnreachable(((SynchronizedStmt) last).getBody());
+      } else if (last instanceof ForStmt) {
+         ForStmt stmt = (ForStmt) last;
+         Optional<Expression> end = stmt.getCompare();
+         if (end.isEmpty()) {
+            return true;
+         }
       } else if (last instanceof SwitchStmt) {
          SwitchStmt switchStmt = (SwitchStmt) last;
          Optional<SwitchEntry> optionalLastSwitch = switchStmt.getEntries().getLast();
