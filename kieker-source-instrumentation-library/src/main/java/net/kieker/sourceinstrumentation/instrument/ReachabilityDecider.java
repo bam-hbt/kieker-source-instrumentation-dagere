@@ -59,7 +59,9 @@ public class ReachabilityDecider {
       } else if (last instanceof ForStmt) {
          ForStmt stmt = (ForStmt) last;
          Optional<Expression> end = stmt.getCompare();
-         if (end.isEmpty()) {
+         
+         // Do not change to isEmpty until only Java 11 is used
+         if (!end.isPresent()) {
             return true;
          }
       } else if (last instanceof SwitchStmt) {
