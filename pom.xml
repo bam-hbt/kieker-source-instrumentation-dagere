@@ -35,8 +35,17 @@
 
 	<modules>
 		<module>kieker-source-instrumentation-library</module>
-		<module>kieker-source-instrumentation-starter</module>
 	</modules>
+	
+	<profiles>
+		<profile>
+			<id>buildStarter</id>
+			<modules>
+				<module>kieker-source-instrumentation-library</module>
+		<module>kieker-source-instrumentation-starter</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<licenses>
 		<license>

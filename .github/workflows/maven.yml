@@ -33,7 +33,7 @@ jobs:
         key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
         restore-keys: ${{ runner.os }}-m2
     - name: Build with Maven
-      run: ./mvnw -B verify --file pom.xml 
+      run: ./mvnw -B verify --file pom.xml -P buildStarter 
     - name: Upload Unit Test Results
       if: ${{ always() }}
       uses: actions/upload-artifact@v2
