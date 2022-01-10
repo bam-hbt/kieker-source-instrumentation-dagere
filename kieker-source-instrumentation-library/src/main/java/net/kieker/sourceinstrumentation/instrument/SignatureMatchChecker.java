@@ -48,7 +48,7 @@ public class SignatureMatchChecker {
       } else {
          oneMatches = oneIncludeMatches(signature, oneMatches);
       }
-      if (excludes != null) {
+      if (oneMatches && excludes != null) {
          oneMatches = oneExcludeMatches(signature, oneMatches);
       }
 
