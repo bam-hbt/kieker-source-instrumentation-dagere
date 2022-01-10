@@ -27,14 +27,16 @@ public class SignatureMatchChecker {
       populatePatternSet(excludes, excludePatterns);
    }
 
-   private void populatePatternSet(final Set<String> includes, final Set<Pattern> patternSet) {
-      for (String include : includes) {
-         String pattern = fixConstructorPattern(include);
-         try {
-            Pattern patternP = PatternParser.parseToPattern(pattern);
-            patternSet.add(patternP);
-         } catch (InvalidPatternException e) {
-            throw new RuntimeException(e);
+   private void populatePatternSet(final Set<String> stringPatterns, final Set<Pattern> patternSet) {
+      if (stringPatterns != null) {
+         for (String include : stringPatterns) {
+            String pattern = fixConstructorPattern(include);
+            try {
+               Pattern patternP = PatternParser.parseToPattern(pattern);
+               patternSet.add(patternP);
+            } catch (InvalidPatternException e) {
+               throw new RuntimeException(e);
+            }
          }
       }
    }
