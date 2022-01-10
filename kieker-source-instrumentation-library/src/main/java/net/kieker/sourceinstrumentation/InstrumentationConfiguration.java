@@ -133,14 +133,6 @@ public class InstrumentationConfiguration {
       return createDefaultConstructor;
    }
 
-   public Set<String> getIncludedPatterns() {
-      return includedPatterns;
-   }
-
-   public Set<String> getExcludedPatterns() {
-      return excludedPatterns;
-   }
-
    public boolean isEnableAdaptiveMonitoring() {
       return enableAdaptiveMonitoring;
    }
