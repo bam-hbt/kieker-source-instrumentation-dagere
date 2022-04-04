@@ -12,12 +12,12 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.kieker.sourceinstrumentation.AllowedKiekerRecord;
-import net.kieker.sourceinstrumentation.InstrumentationConfiguration;
+import net.kieker.sourceinstrumentation.JavaVersionUtil;
 import net.kieker.sourceinstrumentation.SourceInstrumentationTestUtil;
 import net.kieker.sourceinstrumentation.instrument.InstrumentKiekerSource;
 import net.kieker.sourceinstrumentation.util.TestConstants;
 
-public class SourceInstrumentationIT {
+public class SneakyThrowsIT {
 
    @BeforeEach
    public void before() throws IOException {
@@ -41,20 +41,13 @@ public class SourceInstrumentationIT {
 
    @Test
    public void testExecution() throws IOException {
-      SourceInstrumentationTestUtil.initProject("/project_sneakyThrows/");
-      File source = new File("src/test/resources/project_sneakyThrows/pom.xml");
-      File target = new File(TestConstants.CURRENT_FOLDER, "pom.xml");
-      FileUtils.copyFile(source, target);
-      
+      SourceInstrumentationTestUtil.initProject("/project_2/");
       File adaptiveFile = writeAdaptiveInstrumentationInfo();
 
       File tempFolder = new File(TestConstants.CURRENT_FOLDER, "results");
       tempFolder.mkdir();
 
-      InstrumentationConfiguration configuration = new InstrumentationConfiguration(AllowedKiekerRecord.OPERATIONEXECUTION, 
-            false, null, false, true, 0, true);
-      
-      InstrumentKiekerSource instrumenter = new InstrumentKiekerSource(configuration);
+      InstrumentKiekerSource instrumenter = new InstrumentKiekerSource(AllowedKiekerRecord.OPERATIONEXECUTION);
       instrumenter.instrumentProject(TestConstants.CURRENT_FOLDER);
 
       final ProcessBuilder pb = new ProcessBuilder("mvn", "test",
@@ -67,5 +60,8 @@ public class SourceInstrumentationIT {
       String monitorLogs =  SimpleProjectUtil.getLogsFromProcessBuilder(pb);
       
       MatcherAssert.assertThat(monitorLogs, Matchers.containsString("public void de.peass.MainTest.testMe()"));
+      if (JavaVersionUtil.getSystemJavaVersion() > 8) {
+         MatcherAssert.assertThat(monitorLogs, Matchers.not(Matchers.containsString("public void de.peass.AddRandomNumbers.addSomething();")));
+      }
    }
 }

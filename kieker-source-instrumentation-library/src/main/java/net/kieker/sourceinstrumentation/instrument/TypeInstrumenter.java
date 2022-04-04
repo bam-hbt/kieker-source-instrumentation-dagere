@@ -19,6 +19,7 @@ import com.github.javaparser.ast.body.ConstructorDeclaration;
 import com.github.javaparser.ast.body.EnumDeclaration;
 import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
+import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
@@ -138,6 +139,11 @@ public class TypeInstrumenter {
       if (method.isStatic()) {
          extracted.setStatic(true);
       }
+      if (method.getAnnotationByName("SneakyThrows").isPresent()) {
+         extracted.addAndGetAnnotation("SneakyThrows");
+      } else if (method.getAnnotationByName("lombok.SneakyThrows").isPresent()) {
+         extracted.addAndGetAnnotation("lombok.SneakyThrows");
+      }
 
       methodsToAdd.add(extracted);
       return generatedName;
@@ -152,6 +158,10 @@ public class TypeInstrumenter {
          addedMethod.getParameters().addAll(methodToAdd.getParameters());
          addedMethod.setBody(methodToAdd.getBody().get());
          addedMethod.setType(methodToAdd.getType());
+         for (AnnotationExpr annotation : methodToAdd.getAnnotations()) {
+            String addAnnotation = annotation.getNameAsString();
+            addedMethod.addAndGetAnnotation(addAnnotation);
+         }
       }
    }
 
