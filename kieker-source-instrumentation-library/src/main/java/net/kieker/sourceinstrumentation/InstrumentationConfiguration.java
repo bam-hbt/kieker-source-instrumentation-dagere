@@ -23,8 +23,6 @@ public class InstrumentationConfiguration {
    private final boolean enableDeactivation;
    private final boolean createDefaultConstructor;
    private final boolean enableAdaptiveMonitoring;
-   private final Set<String> includedPatterns;
-   private final Set<String> excludedPatterns;
    private final SignatureMatchChecker checker;
    private final boolean extractMethod;
 
@@ -35,8 +33,7 @@ public class InstrumentationConfiguration {
          final Set<String> includedPatterns, final boolean enableAdaptiveMonitoring, final boolean enableDecativation, final int samplingCount, final boolean extractMethod) {
       this.usedRecord = usedRecord;
       this.aggregate = aggregate;
-      this.includedPatterns = includedPatterns;
-      excludedPatterns = new HashSet<String>();
+      
       if (JavaVersionUtil.getSystemJavaVersion() == 8) {
          LOG.info(JAVA_8_MESSAGE);
          this.enableAdaptiveMonitoring = false;
@@ -51,6 +48,7 @@ public class InstrumentationConfiguration {
       this.createDefaultConstructor = true;
       this.samplingCount = samplingCount;
       
+      Set<String> excludedPatterns = new HashSet<String>();
       checker = new SignatureMatchChecker(includedPatterns, excludedPatterns);
 
       check();
@@ -72,8 +70,7 @@ public class InstrumentationConfiguration {
          this.enableDeactivation = enableDecativation;
          this.extractMethod = extractMethod;
       }
-      this.includedPatterns = includedPatterns;
-      excludedPatterns = new HashSet<String>();
+      Set<String> excludedPatterns = new HashSet<String>();
       this.samplingCount = samplingCount;
 
       checker = new SignatureMatchChecker(includedPatterns, excludedPatterns);
@@ -97,8 +94,6 @@ public class InstrumentationConfiguration {
          this.enableDeactivation = enableDecativation;
          this.extractMethod = extractMethod;
       }
-      this.includedPatterns = includedPatterns;
-      this.excludedPatterns = excludedPatterns;
       this.samplingCount = samplingCount;
       
       checker = new SignatureMatchChecker(includedPatterns, excludedPatterns);
@@ -114,8 +109,6 @@ public class InstrumentationConfiguration {
          throw new RuntimeException("Disabling deactivation and extracting methods does not make sense, since it only slows down the process");
       }
    }
-
-   
 
    public AllowedKiekerRecord getUsedRecord() {
       return usedRecord;
