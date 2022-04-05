@@ -89,8 +89,7 @@ public class TypeInstrumenter {
          if (child instanceof MethodDeclaration) {
             MethodDeclaration method = (MethodDeclaration) child;
             if (clazz instanceof ClassOrInterfaceDeclaration) {
-               ClassOrInterfaceDeclaration declaringEntity = (ClassOrInterfaceDeclaration) clazz;
-               if (!declaringEntity.isInterface() || method.getBody().isPresent()) {
+               if (method.getBody().isPresent()) {
                   if (configuration.isExtractMethod()) {
                      extractMethod(methodsToAdd, method);
                   }
