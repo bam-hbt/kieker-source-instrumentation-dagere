@@ -89,6 +89,23 @@ public class TestTypeInstrumentation {
       }
    }
 
+   @Test
+   public void testNoExtractionAndInstrumentationWithEmptyBody() throws IOException {
+      final ClassOrInterfaceDeclaration clazz = setupClazzWithAbstractMethodWithoutBody();
+      final InstrumentationConfiguration configuration = new InstrumentationConfiguration(AllowedKiekerRecord.OPERATIONEXECUTION, false, null, true, true, 0, true);
+      final TypeInstrumenter instrumenter = new TypeInstrumenter(configuration, Mockito.mock(CompilationUnit.class), clazz);
+      Assert.assertTrue(instrumenter.handleTypeDeclaration(clazz, null));
+   }
+
+   private ClassOrInterfaceDeclaration setupClazzWithAbstractMethodWithoutBody() {
+      final ClassOrInterfaceDeclaration clazz = new ClassOrInterfaceDeclaration();
+      clazz.setName("MyClazz");
+      clazz.addMethod("myAbstractMethod", Modifier.Keyword.ABSTRACT);
+      clazz.getMethodsByName("myAbstractMethod").get(0).removeBody();
+      Assert.assertFalse(clazz.getMethodsByName("myAbstractMethod").get(0).getBody().isPresent());
+      return clazz;
+   }
+
    private ClassOrInterfaceDeclaration buildClass() {
 
       ClassOrInterfaceDeclaration clazz = new ClassOrInterfaceDeclaration();
