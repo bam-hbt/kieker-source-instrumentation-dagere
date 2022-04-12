@@ -19,7 +19,6 @@ import com.github.javaparser.ast.type.Type;
 
 import net.kieker.sourceinstrumentation.parseUtils.ClazzFinder;
 
-
 public class SignatureReader {
 
    /**
@@ -206,7 +205,12 @@ public class SignatureReader {
    private String getModifierString(final NodeList<Modifier> listOfModifiers) {
       String modifiers = "";
       for (Modifier modifier : listOfModifiers) {
-         modifiers += modifier;
+         String modifierName = modifier.toString();
+         if (modifierName.equals("private ") || modifierName.equals("protected ") || modifierName.equals("public ")) {
+            modifiers = modifierName + modifiers;
+         } else {
+            modifiers += modifier;
+         }
       }
       return modifiers;
    }
