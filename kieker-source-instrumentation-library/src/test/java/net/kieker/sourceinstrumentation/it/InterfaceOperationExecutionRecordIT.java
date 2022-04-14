@@ -14,7 +14,7 @@ import net.kieker.sourceinstrumentation.SourceInstrumentationTestUtil;
 import net.kieker.sourceinstrumentation.instrument.InstrumentKiekerSource;
 import net.kieker.sourceinstrumentation.util.TestConstants;
 
-public class SourceInstrumentationInterfaceIT {
+public class InterfaceOperationExecutionRecordIT {
    
    private static final String INTERFACE_FOLDER = "/project_2_interface/";
 
