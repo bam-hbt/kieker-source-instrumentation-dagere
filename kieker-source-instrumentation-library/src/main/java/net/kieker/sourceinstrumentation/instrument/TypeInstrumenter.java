@@ -70,17 +70,21 @@ public class TypeInstrumenter {
          boolean fileContainsChange = handleChildren(type, name);
 
          if (fileContainsChange) {
-            if (type instanceof ClassOrInterfaceDeclaration) {
-               ClassOrInterfaceDeclaration declaration = (ClassOrInterfaceDeclaration) type;
-               if (declaration.isInterface()) {
-                  ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(declaration);
-                  addFields(kiekerValueSubclazz, type);
+            if (configuration.isAggregate()) {
+               if (type instanceof ClassOrInterfaceDeclaration) {
+                  ClassOrInterfaceDeclaration declaration = (ClassOrInterfaceDeclaration) type;
+                  if (declaration.isInterface()) {
+                     ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(declaration);
+                     addFields(kiekerValueSubclazz, type);
+                  } else {
+                     addFields(type, type);
+                  }
                } else {
-                  addFields(type, type);
+                  ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(type);
+                  addFields(kiekerValueSubclazz, type);
                }
             } else {
-               ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(type);
-               addFields(kiekerValueSubclazz, type);
+               addFields(type, type);
             }
 
             return true;
@@ -114,7 +118,7 @@ public class TypeInstrumenter {
       for (String counterName : sumsToAdd) {
          type.addField("long", counterName, Keyword.PRIVATE, Keyword.STATIC);
       }
-      
+
       if (parentType == topLevelType) {
          new KiekerFieldAdder(configuration).addKiekerFields(type);
       }
