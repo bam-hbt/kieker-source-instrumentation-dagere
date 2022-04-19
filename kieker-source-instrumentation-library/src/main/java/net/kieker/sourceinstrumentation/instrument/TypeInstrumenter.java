@@ -21,9 +21,13 @@ import com.github.javaparser.ast.body.MethodDeclaration;
 import com.github.javaparser.ast.body.TypeDeclaration;
 import com.github.javaparser.ast.expr.AnnotationExpr;
 import com.github.javaparser.ast.expr.Expression;
+import com.github.javaparser.ast.expr.IntegerLiteralExpr;
+import com.github.javaparser.ast.expr.LongLiteralExpr;
 import com.github.javaparser.ast.expr.MethodCallExpr;
 import com.github.javaparser.ast.stmt.BlockStmt;
 import com.github.javaparser.ast.stmt.ExpressionStmt;
+import com.github.javaparser.ast.visitor.GenericVisitor;
+import com.github.javaparser.ast.visitor.VoidVisitor;
 
 import net.kieker.sourceinstrumentation.InstrumentationConfiguration;
 import net.kieker.sourceinstrumentation.InstrumentationConstants;
@@ -31,6 +35,8 @@ import net.kieker.sourceinstrumentation.instrument.codeblocks.BlockBuilder;
 import net.kieker.sourceinstrumentation.instrument.codeblocks.CodeBlockTransformer;
 
 public class TypeInstrumenter {
+
+   public static final String KIEKER_VALUES = "_Kieker_Values";
 
    private static final Logger LOG = LogManager.getLogger(TypeInstrumenter.class);
 
@@ -64,21 +70,54 @@ public class TypeInstrumenter {
          boolean fileContainsChange = handleChildren(type, name);
 
          if (fileContainsChange) {
-            for (String counterName : countersToAdd) {
-               type.addField("int", counterName, Keyword.PRIVATE, Keyword.STATIC);
-            }
-            for (String counterName : sumsToAdd) {
-               type.addField("long", counterName, Keyword.PRIVATE, Keyword.STATIC);
-            }
-
-            if (type == topLevelType) {
-               new KiekerFieldAdder(configuration).addKiekerFields(type);
+            if (type instanceof ClassOrInterfaceDeclaration) {
+               ClassOrInterfaceDeclaration declaration = (ClassOrInterfaceDeclaration) type;
+               if (declaration.isInterface()) {
+                  ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(declaration);
+                  addFields(kiekerValueSubclazz, type);
+               } else {
+                  addFields(type, type);
+               }
+            } else {
+               ClassOrInterfaceDeclaration kiekerValueSubclazz = getValueSubclass(type);
+               addFields(kiekerValueSubclazz, type);
             }
 
             return true;
          }
       }
       return false;
+   }
+
+   private ClassOrInterfaceDeclaration getValueSubclass(TypeDeclaration<?> declaration) {
+      List<ClassOrInterfaceDeclaration> subclazzes = declaration.findAll(ClassOrInterfaceDeclaration.class);
+      ClassOrInterfaceDeclaration kiekerValueSubclazz = null;
+      for (ClassOrInterfaceDeclaration subclazz : subclazzes) {
+         if (subclazz.getNameAsString().equals(KIEKER_VALUES)) {
+            kiekerValueSubclazz = subclazz;
+            break;
+         }
+      }
+      if (kiekerValueSubclazz == null) {
+         kiekerValueSubclazz = new ClassOrInterfaceDeclaration();
+         kiekerValueSubclazz.setName(KIEKER_VALUES);
+         kiekerValueSubclazz.setModifiers(Keyword.STATIC);
+         declaration.getMembers().add(kiekerValueSubclazz);
+      }
+      return kiekerValueSubclazz;
+   }
+
+   private void addFields(final TypeDeclaration<?> type, TypeDeclaration<?> parentType) {
+      for (String counterName : countersToAdd) {
+         type.addField("int", counterName, Keyword.PRIVATE, Keyword.STATIC);
+      }
+      for (String counterName : sumsToAdd) {
+         type.addField("long", counterName, Keyword.PRIVATE, Keyword.STATIC);
+      }
+      
+      if (parentType == topLevelType) {
+         new KiekerFieldAdder(configuration).addKiekerFields(type);
+      }
    }
 
    private boolean handleChildren(final TypeDeclaration<?> clazz, final String name) {
@@ -219,7 +258,7 @@ public class TypeInstrumenter {
             final boolean needsReturn = method.getType().toString().equals("void") && configurationRequiresReturn;
             final SamplingParameters parameters = createParameters(signature);
 
-            final BlockStmt replacedStatement = blockBuilder.buildStatement(originalBlock, needsReturn, parameters, transformer);
+            final BlockStmt replacedStatement = blockBuilder.buildStatement(topLevelType, originalBlock, needsReturn, parameters, transformer);
 
             method.setBody(replacedStatement);
             oneHasChanged = true;

@@ -2,6 +2,10 @@ package net.kieker.sourceinstrumentation.it;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 
 import org.apache.commons.io.FileUtils;
 import org.hamcrest.MatcherAssert;
@@ -10,6 +14,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import net.kieker.sourceinstrumentation.AllowedKiekerRecord;
+import net.kieker.sourceinstrumentation.InstrumentationConfiguration;
 import net.kieker.sourceinstrumentation.SourceInstrumentationTestUtil;
 import net.kieker.sourceinstrumentation.instrument.InstrumentKiekerSource;
 import net.kieker.sourceinstrumentation.util.TestConstants;
@@ -37,7 +42,10 @@ public class InterfaceDurationRecordIT {
       File tempFolder = new File(TestConstants.CURRENT_FOLDER, "results");
       tempFolder.mkdir();
 
-      InstrumentKiekerSource instrumenter = new InstrumentKiekerSource(AllowedKiekerRecord.DURATION);
+      Set<String> pattern = new TreeSet<>();
+      pattern.add("*");
+      InstrumentationConfiguration configuration = new InstrumentationConfiguration(AllowedKiekerRecord.DURATION, true, pattern, false, false, 100, false);
+      InstrumentKiekerSource instrumenter = new InstrumentKiekerSource(configuration);
       instrumenter.instrumentProject(TestConstants.CURRENT_FOLDER);
 
       final ProcessBuilder pb = new ProcessBuilder("mvn", "test", 

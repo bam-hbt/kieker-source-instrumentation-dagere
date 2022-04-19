@@ -3,6 +3,7 @@ package net.kieker.sourceinstrumentation.instrument.codeblocks;
 import com.github.javaparser.ast.body.TypeDeclaration;
 
 import net.kieker.sourceinstrumentation.InstrumentationConstants;
+import net.kieker.sourceinstrumentation.instrument.TypeInstrumenter;
 
 public class CodeBlockTransformer {
 
@@ -49,6 +50,13 @@ public class CodeBlockTransformer {
             .replaceAll(InstrumentationConstants.PREFIX + "controlFlowRegistry", topLevelType.getNameAsString() + "." + InstrumentationConstants.PREFIX + "controlFlowRegistry")
             .replaceAll(InstrumentationConstants.PREFIX + "controller", topLevelType.getNameAsString() + "." + InstrumentationConstants.PREFIX + "controller")
             .replaceAll(InstrumentationConstants.PREFIX + "TIME_SOURCE", topLevelType.getNameAsString() + "." + InstrumentationConstants.PREFIX + "TIME_SOURCE");
+      return before;
+   }
+   
+   public static String replaceStaticVariablesByClassStaticVariables(final String original) {
+      String before = original
+            .replaceAll(InstrumentationConstants.PREFIX + "TIME_SOURCE", TypeInstrumenter.KIEKER_VALUES + "." + InstrumentationConstants.PREFIX + "TIME_SOURCE")
+            .replaceAll(InstrumentationConstants.PREFIX + "controller", TypeInstrumenter.KIEKER_VALUES + "." + InstrumentationConstants.PREFIX + "controller");
       return before;
    }
 

@@ -41,7 +41,7 @@ public class BlockBuilder {
          originalBlock.getStatements().remove(constructorStatement);
       }
 
-      final BlockStmt regularChangedStatement = buildStatement(originalBlock, mayNeedReturn, parameters, transformer);
+      final BlockStmt regularChangedStatement = buildStatement(type, originalBlock, mayNeedReturn, parameters, transformer);
       for (Statement st : regularChangedStatement.getStatements()) {
          replacedStatement.addAndGetStatement(st);
       }
@@ -59,7 +59,7 @@ public class BlockBuilder {
       return constructorStatement;
    }
 
-   public BlockStmt buildStatement(final BlockStmt originalBlock, final boolean mayNeedReturn, final SamplingParameters parameters, final CodeBlockTransformer transformer) {
+   public BlockStmt buildStatement(TypeDeclaration<?> type, final BlockStmt originalBlock, final boolean mayNeedReturn, final SamplingParameters parameters, final CodeBlockTransformer transformer) {
       if (recordType.equals(AllowedKiekerRecord.OPERATIONEXECUTION)) {
          return buildOperationExecutionStatement(originalBlock, parameters.getSignature(), mayNeedReturn, transformer);
       } else if (recordType.equals(AllowedKiekerRecord.DURATION)) {
