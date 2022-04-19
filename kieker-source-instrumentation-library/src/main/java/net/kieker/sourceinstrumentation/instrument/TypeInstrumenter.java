@@ -105,7 +105,7 @@ public class TypeInstrumenter {
       if (kiekerValueSubclazz == null) {
          kiekerValueSubclazz = new ClassOrInterfaceDeclaration();
          kiekerValueSubclazz.setName(KIEKER_VALUES);
-         kiekerValueSubclazz.setModifiers(Keyword.STATIC);
+         kiekerValueSubclazz.setModifiers(Keyword.FINAL, Keyword.STATIC);
          declaration.getMembers().add(kiekerValueSubclazz);
       }
       return kiekerValueSubclazz;
