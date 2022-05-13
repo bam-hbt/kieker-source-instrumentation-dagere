@@ -38,7 +38,7 @@ public class InstrumentKiekerSource {
 
    public void instrumentProject(final File projectFolder) throws IOException {
       for (File javaFile : FileUtils.listFiles(projectFolder, new WildcardFileFilter("*.java"), TrueFileFilter.INSTANCE)) {
-         LOG.trace("Instrumenting: {}", javaFile);
+         LOG.debug("Instrumenting: {}", javaFile);
          instrument(javaFile);
       }
    }
