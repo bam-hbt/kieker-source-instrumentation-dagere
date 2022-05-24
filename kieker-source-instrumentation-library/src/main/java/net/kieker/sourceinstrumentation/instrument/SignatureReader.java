@@ -212,6 +212,6 @@ public class SignatureReader {
             modifiers += modifier;
          }
       }
-      return modifiers;
+      return modifiers.isEmpty() ? Modifier.publicModifier().toString() : modifiers;
    }
 }

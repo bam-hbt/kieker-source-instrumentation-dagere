@@ -2,6 +2,7 @@ package net.kieker.sourceinstrumentation;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.logging.log4j.LogManager;
@@ -97,6 +98,28 @@ public class TestTypeInstrumentation {
       Assert.assertTrue(instrumenter.handleTypeDeclaration(clazz, null));
    }
 
+   @Test
+   public void testNoModifierInstrumentation() throws IOException {
+      ClassOrInterfaceDeclaration clazz = new ClassOrInterfaceDeclaration();
+      clazz.setName("MyClazz");
+      addMethodWithoutModifier(clazz);
+
+      HashSet<String> includes = new HashSet<String>();
+      includes.add("public void de.dagere.testMyClazz.myReqularMethodWithoutModifier()");
+
+      final InstrumentationConfiguration configuration = new InstrumentationConfiguration(AllowedKiekerRecord.OPERATIONEXECUTION, false, includes, true, true, 0, false);
+
+      final TypeInstrumenter instrumenter = new TypeInstrumenter(configuration, Mockito.mock(CompilationUnit.class), clazz);
+      Assert.assertTrue(instrumenter.handleTypeDeclaration(clazz, "de.dagere.test"));
+
+      if (configuration.isExtractMethod()) {
+         List<MethodDeclaration> myReqularMethodWithoutModifier = clazz.getMethodsByName(InstrumentationConstants.PREFIX + "myReqularMethodWithoutModifier");
+         Assert.assertEquals(1, myReqularMethodWithoutModifier.size());
+         MatcherAssert.assertThat(myReqularMethodWithoutModifier.get(0).getModifiers(), Matchers.containsInAnyOrder(Modifier.privateModifier(), Modifier.finalModifier()));
+         MatcherAssert.assertThat(clazz.toString(), Matchers.containsString("private final void " + InstrumentationConstants.PREFIX + "myReqularMethodWithoutModifier()"));
+      }
+   }
+
    private ClassOrInterfaceDeclaration setupClazzWithAbstractMethodWithoutBody() {
       final ClassOrInterfaceDeclaration clazz = new ClassOrInterfaceDeclaration();
       clazz.setName("MyClazz");
@@ -136,6 +159,12 @@ public class TestTypeInstrumentation {
    private void addStaticMethod(final ClassOrInterfaceDeclaration clazz) {
       BlockStmt simpleBlock = TestBlockBuilder.buildSimpleBlock();
       MethodDeclaration method = clazz.addMethod("myStaticMethod", Modifier.Keyword.STATIC);
+      method.setBody(simpleBlock);
+   }
+
+   private void addMethodWithoutModifier(final ClassOrInterfaceDeclaration clazz) {
+      BlockStmt simpleBlock = TestBlockBuilder.buildSimpleBlock();
+      MethodDeclaration method = clazz.addMethod("myReqularMethodWithoutModifier");
       method.setBody(simpleBlock);
    }
 
