@@ -36,8 +36,17 @@ public class InstrumentKiekerSource {
       this.configuration = configuration;
    }
 
-   public void instrumentProject(final File projectFolder) throws IOException {
-      for (File javaFile : FileUtils.listFiles(projectFolder, new WildcardFileFilter("*.java"), TrueFileFilter.INSTANCE)) {
+   public void instrumentProject(final File... sourceFolders) throws IOException {
+      Set<File> instrumentable = new HashSet<>();
+      for (File potentialSourceFolder : sourceFolders) {
+         if (potentialSourceFolder.exists()) {
+            for (File javaFile : FileUtils.listFiles(potentialSourceFolder, new WildcardFileFilter("*.java"), TrueFileFilter.INSTANCE)) {
+               instrumentable.add(javaFile);
+            }
+         }
+      }
+
+      for (File javaFile : instrumentable) {
          LOG.trace("Instrumenting: {}", javaFile);
          instrument(javaFile);
       }
