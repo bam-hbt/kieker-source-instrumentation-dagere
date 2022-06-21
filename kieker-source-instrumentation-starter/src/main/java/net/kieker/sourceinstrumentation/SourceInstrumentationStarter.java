@@ -25,12 +25,9 @@ public class SourceInstrumentationStarter implements Callable<Integer> {
 
    @Override
    public Integer call() throws Exception {
-      final HashSet<String> includedPatterns = createIncludedPatterns();
-
-      Set<String> excludedPattern = new HashSet<>();
-      for (String pattern : instrumentationConfigMixin.getExcludedPatterns()) {
-         excludedPattern.add(pattern);
-      }
+      final Set<String> includedPatterns = createIncludedPatterns();
+      final Set<String> excludedPattern = createExcludePatterns();
+      
       final InstrumentationConfiguration configuration = new InstrumentationConfiguration(instrumentationConfigMixin.getUsedRecord(), instrumentationConfigMixin.isAggregate(),
             instrumentationConfigMixin.isCreateDefaultConstructor(),
             instrumentationConfigMixin.isEnableAdaptiveMonitoring(), includedPatterns, excludedPattern,
@@ -41,9 +38,19 @@ public class SourceInstrumentationStarter implements Callable<Integer> {
       return 0;
    }
 
+   private Set<String> createExcludePatterns() {
+      Set<String> excludedPattern = new HashSet<>();
+      if (instrumentationConfigMixin.getExcludedPatterns() != null) {
+         for (String pattern : instrumentationConfigMixin.getExcludedPatterns()) {
+            excludedPattern.add(pattern);
+         }
+      }
+      return excludedPattern;
+   }
+
    private HashSet<String> createIncludedPatterns() {
       final HashSet<String> includedPatterns = new HashSet<>();
-      if (instrumentationConfigMixin.getIncludedPatterns().isEmpty()) {
+      if (instrumentationConfigMixin.getIncludedPatterns() == null || instrumentationConfigMixin.getIncludedPatterns().isEmpty()) {
          includedPatterns.add("*");
       } else {
          for (String pattern : instrumentationConfigMixin.getIncludedPatterns()) {
