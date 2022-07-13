@@ -35,7 +35,7 @@ public class SignatureMatchChecker {
                Pattern patternP = PatternParser.parseToPattern(pattern);
                patternSet.add(patternP);
             } catch (InvalidPatternException e) {
-               throw new RuntimeException(e);
+               throw new RuntimeException("Was not able to parse pattern " + include, e);
             }
          }
       }
